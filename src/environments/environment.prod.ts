@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  BASE_API_URL: 'http://www.mocky.io/v3/',
+
+  production: true,
 };

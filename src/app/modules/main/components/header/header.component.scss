@@ -1,0 +1,21 @@
+.container-header {
+  max-height: 100%;
+}
+
+.header-main {
+  height: 80%;
+  h1 {
+    text-transform: uppercase;
+  }
+}
+
+.header-breadcrumbs {
+  height: 20%;
+  box-shadow: 0 3px 5px -1px #0003, 0 6px 10px #00000024, 0 1px 18px #0000001f;
+  h2 {
+    font-size: 0.7em;
+    a {
+      color: #ffffff;
+    }
+  }
+}

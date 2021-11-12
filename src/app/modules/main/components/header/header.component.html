@@ -1,0 +1,19 @@
+<header class="container-header">
+  <mat-toolbar class="header-main" color="primary">
+    <mat-toolbar-row>
+      <h1 *ngIf="currentRoute.length < 1 || currentRoute[2] === 'listar'">Investimentos</h1>
+
+      <h1 *ngIf="currentRoute[2] === 'resgatar'">Resgatar</h1>
+    </mat-toolbar-row>
+
+    <mat-toolbar-row class="header-breadcrumbs">
+      <h2 *ngIf="currentRoute.length < 1 || currentRoute[2] === 'listar'"><a
+          [routerLink]="['/investimentos/listar']">Listar</a></h2>
+
+      <h2 *ngIf="currentRoute[2] === 'resgatar'"><a [routerLink]="['/investimentos/listar']">Listar</a>
+        >
+        <a>Resgatar</a>
+      </h2>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</header>

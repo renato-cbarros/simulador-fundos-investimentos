@@ -1,0 +1,25 @@
+<div class="container-table mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" class="table" matSort>
+
+    <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columnsConfig?.titles[column] }} </th>
+
+      <td mat-cell *matCellDef="let element" (click)="columnsConfig?.navigate(column === 'nome', element[column])">
+        {{ columnsConfig?.types[column] === 'text' ? element[column] : (columnsConfig?.types[column] === 'currency' ? (element[column] | currency: 'R$') : '')}}
+
+        <!-- Form component -->
+        <app-form *ngIf="columnsConfig?.types[column] === 'input'"
+          [formConfig]="{ formGroup: form, formControlName: element['nome'], control: form.controls[element['nome']], label: element['nome'], id: element['id'] }">
+        </app-form>
+      </td>
+    </ng-container>
+
+    <tr class="table-tr-header" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr [ngClass]="{'tr-disabled' : columnsConfig?.isDisabled(row.indicadorCarencia)}" class="table-tr-body" mat-row
+      *matRowDef="let row; columns: displayedColumns;">
+    </tr>
+  </table>
+  <div class="table-spinner" *ngIf="!dataSource">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 100px auto 35px;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+}
+
+.header {
+  grid-area: header;
+}
+
+.main {
+  grid-area: main;
+  overflow-x: hidden;
+}
+
+.footer {
+  grid-area: footer;
+}

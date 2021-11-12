@@ -1,0 +1,59 @@
+<section class="container-main">
+  <h3 class="title">Dados do investimento</h3>
+
+  <mat-card class="card mat-elevation-z8">
+    <div class="card-content-header" *ngIf="investment">
+      <div>
+        <mat-icon>perm_identity</mat-icon>
+        <span>
+          <p>Nome</p>
+          <p>{{ investment?.nome }}</p>
+        </span>
+      </div>
+
+      <div>
+        <mat-icon>show_chart</mat-icon>
+        <span>
+          <p>Objetivo</p>
+          <p>{{ investment?.objetivo }}</p>
+        </span>
+      </div>
+
+      <div>
+        <mat-icon>monetization_on</mat-icon>
+        <span>
+          <p>Saldo Total</p>
+          <p>{{ investment?.saldoTotal | currency:'R$' }}</p>
+        </span>
+      </div>
+    </div>
+
+    <div class="card-spinner" *ngIf="!investment">
+      <mat-spinner></mat-spinner>
+    </div>
+  </mat-card>
+
+  <h3 class="title">Resgate</h3>
+
+  <app-table *ngIf="data$ && formDataRedeem" (valueChangesForm)="handlerValueChangesForm($event)" [data]="data$"
+    [columnsConfig]="columnsConfig" [form]="formDataRedeem">
+  </app-table>
+
+  <mat-card class="card mat-elevation-z8">
+    <div class="card-content-footer" *ngIf="investment">
+      <div>
+        <mat-icon>payments</mat-icon>
+        <span>
+          <p>Valor Total do Resgate:</p>
+          <p>{{ totalRedeem | currency:'R$' }}</p>
+        </span>
+      </div>
+
+      <div>
+        <button mat-raised-button color="warn" [routerLink]="['/investimentos/listar']">Cancelar</button>
+        <button id="redeem-btn-confirm" mat-raised-button color="primary" (click)="onSubmit()">Confirmar
+          Resgate</button>
+      </div>
+    </div>
+  </mat-card>
+</section>
