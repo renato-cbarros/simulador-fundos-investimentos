@@ -1,10 +1,9 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement, Input } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, Validators } from '@angular/forms';
 
 import { HandlerFormErrorComponent } from './handlerFormError.component';
-import { FormControl, Validators } from '@angular/forms';
 
 describe('HandlerFormErrorComponent', () => {
   let component: HandlerFormErrorComponent;
@@ -13,6 +12,7 @@ describe('HandlerFormErrorComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [HandlerFormErrorComponent],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 
@@ -27,7 +27,20 @@ describe('HandlerFormErrorComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('(U) should valid formControl', () => {
+  it('(U) should return error message for invalid form', () => {
+    let mockForm = new FormBuilder().group({
+      field: [null, Validators.compose([Validators.max(10)])],
+    });
 
+    mockForm.controls.field.setValue(10000);
+    mockForm.controls.field.markAllAsTouched();
+    mockForm.controls.field.updateValueAndValidity();
+
+    component.control = mockForm.controls.field;
+    component.label = 'field';
+
+    expect(component.errorMessage).toContain(
+      'field - O valor a resgatar não pode ser maior que'
+    );
   });
 });

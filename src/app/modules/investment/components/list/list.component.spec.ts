@@ -4,6 +4,8 @@ import { of } from 'rxjs';
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { MockLocationStrategy } from '@angular/common/testing';
+import { LocationStrategy } from '@angular/common';
 
 import { ListComponent } from './list.component';
 import { TableComponent } from 'src/app/shared/components/table/table.component';
@@ -30,7 +32,11 @@ describe('ListComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ListComponent, TableComponent],
       imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [{ provide: Router, useValue: mockRouter }, ListComponent],
+      providers: [
+        { provide: LocationStrategy, useClass: MockLocationStrategy },
+        { provide: Router, useValue: mockRouter },
+        ListComponent,
+      ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });

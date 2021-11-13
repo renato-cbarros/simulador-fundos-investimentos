@@ -13,6 +13,10 @@ describe('ModalComponent', () => {
   let component: ModalComponent;
   let fixture: ComponentFixture<ModalComponent>;
 
+  const dialogMock = {
+    close: () => {},
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ModalComponent],
@@ -20,11 +24,11 @@ describe('ModalComponent', () => {
       providers: [
         {
           provide: MatDialogRef,
-          useValue: {},
+          useValue: dialogMock,
         },
         {
           provide: MAT_DIALOG_DATA,
-          useValue: {},
+          useValue: dialogMock,
         },
       ],
       schemas: [NO_ERRORS_SCHEMA],

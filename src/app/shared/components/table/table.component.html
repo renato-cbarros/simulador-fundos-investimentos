@@ -9,7 +9,7 @@
 
         <!-- Form component -->
         <app-form *ngIf="columnsConfig?.types[column] === 'input'"
-          [formConfig]="{ formGroup: form, formControlName: element['nome'], control: form.controls[element['nome']], label: element['nome'], id: element['id'] }">
+          [formConfig]="{ formGroup: form, formControlName: element['id'], control: form.controls[element['id']], label: element['nome'], id: element['id'] }">
         </app-form>
       </td>
     </ng-container>

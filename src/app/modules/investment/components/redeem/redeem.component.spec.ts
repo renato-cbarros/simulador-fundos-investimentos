@@ -1,23 +1,25 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { LOCALE_ID, NO_ERRORS_SCHEMA } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+registerLocaleData(localePt);
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MockLocationStrategy } from '@angular/common/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { LocationStrategy } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute, Router } from '@angular/router';
+import { of } from 'rxjs';
 
-import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 import { RedeemComponent } from './redeem.component';
 
 import { InvestmentService } from 'src/app/core/services/investment/investment.service';
 import { Investment } from 'src/app/shared/models/Investment';
 
 import { MOCK_RESPONSE_INVESTMENTS } from 'src/app/shared/mocks/response-investments.mock';
-import { of } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { TableComponent } from 'src/app/shared/components/table/table.component';
-import { FormComponent } from 'src/app/shared/components/form/form.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 describe('RedeemComponent', () => {
   let mockRouter = {
@@ -33,26 +35,24 @@ describe('RedeemComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        RedeemComponent,
-        ModalComponent,
-        TableComponent,
-        FormComponent,
-      ],
+      declarations: [RedeemComponent],
       imports: [
         ReactiveFormsModule,
         HttpClientTestingModule,
         RouterTestingModule,
         MatDialogModule,
         BrowserAnimationsModule,
+        SharedModule,
       ],
       providers: [
+        { provide: LOCALE_ID, useValue: 'pt-BR' },
         {
           provide: ActivatedRoute,
           useValue: {
             params: of({ name: 'INVESTIMENTO I' }),
           },
         },
+        { provide: LocationStrategy, useClass: MockLocationStrategy },
         { provide: Router, useValue: mockRouter },
         RedeemComponent,
       ],
@@ -70,59 +70,6 @@ describe('RedeemComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('(U) should get investment', () => {
-    spyOn(service, 'findInvestmentByName').and.returnValue(of(MOCK_INVESTMENT));
-
-    component.ngOnInit();
-    fixture.detectChanges();
-
-    expect(service.findInvestmentByName).toHaveBeenCalledWith('INVESTIMENTO I');
-    expect(component.investment).toBeTruthy();
-    expect(component.investment.nome).toEqual('INVESTIMENTO I');
-  });
-
-  it('(U) should get form value', () => {
-    spyOn(service, 'findInvestmentByName').and.returnValue(of(MOCK_INVESTMENT));
-
-    component.ngOnInit();
-    fixture.detectChanges();
-
-    spyOn(component, 'handlerValueChangesForm');
-
-    expect(service.findInvestmentByName).toHaveBeenCalledWith('INVESTIMENTO I');
-
-    component.formDataRedeem.controls[
-      component.investment.acoes[0].nome
-    ].setValue(15000);
-    component.formDataRedeem.updateValueAndValidity();
-
-    expect(component.handlerValueChangesForm).toHaveBeenCalledWith(
-      component.formDataRedeem.value
-    );
-  });
-
-  it('(U) should submit form invalid', () => {
-    spyOn(service, 'findInvestmentByName').and.returnValue(of(MOCK_INVESTMENT));
-
-    component.ngOnInit();
-    fixture.detectChanges();
-
-    let el = fixture.debugElement.nativeElement;
-
-    component.formDataRedeem.controls[
-      component.investment.acoes[0].nome
-    ].setValue(15000);
-    component.formDataRedeem.updateValueAndValidity();
-
-    el.querySelector('#redeem-btn-confirm').click();
-
-    // fixture.detectChanges();
-    // component.dialog.getDialogById('modal-redeem')?.close('success');
-
-
-    // expect(mockRouter.navigate).toHaveBeenCalledWith(['/investimentos/listar']);
   });
 
   it('(U) should instantiate the table settings', async () => {
@@ -144,5 +91,131 @@ describe('RedeemComponent', () => {
     expect(component.columnsConfig.isDisabled()).toEqual(false);
 
     expect(component.columnsConfig.navigate()).toEqual(undefined);
+  });
+
+  it('(U) should get investment', () => {
+    spyOn(service, 'findInvestmentByName').and.returnValue(of(MOCK_INVESTMENT));
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(service.findInvestmentByName).toHaveBeenCalledWith('INVESTIMENTO I');
+    expect(component.investment).toBeTruthy();
+    expect(component.investment.nome).toEqual('INVESTIMENTO I');
+  });
+
+  it('(U) should render table', () => {
+    spyOn(service, 'findInvestmentByName').and.returnValue(of(MOCK_INVESTMENT));
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    const table = fixture.debugElement.nativeElement.querySelector('.table');
+    expect(table).toBeTruthy();
+  });
+
+  it('(U) should get form value', () => {
+    spyOn(service, 'findInvestmentByName').and.returnValue(of(MOCK_INVESTMENT));
+    spyOn(component, 'handlerValueChangesForm');
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(service.findInvestmentByName).toHaveBeenCalledWith('INVESTIMENTO I');
+
+    component.formDataRedeem.controls[
+      component.investment.acoes[0].id
+    ].setValue(15000);
+    component.formDataRedeem.updateValueAndValidity();
+
+    expect(component.handlerValueChangesForm).toHaveBeenCalledWith(
+      component.formDataRedeem.value
+    );
+  });
+
+  it('(U) should calculate the total redeem', () => {
+    spyOn(service, 'findInvestmentByName').and.returnValue(of(MOCK_INVESTMENT));
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    expect(service.findInvestmentByName).toHaveBeenCalledWith('INVESTIMENTO I');
+
+    component.formDataRedeem.controls[
+      component.investment.acoes[0].id
+    ].setValue(15000);
+    component.formDataRedeem.updateValueAndValidity();
+
+    expect(component.totalRedeem).toEqual(15000);
+  });
+
+  it('(U) should submit form without fields filled in', () => {
+    spyOn(service, 'findInvestmentByName').and.returnValue(of(MOCK_INVESTMENT));
+
+    component.ngOnInit();
+    fixture.detectChanges();
+    let el = fixture.debugElement.nativeElement;
+
+    el.querySelector('#redeem-btn-confirm').click();
+
+    const modalText = document.querySelector('.modal-text');
+
+    expect(modalText?.textContent?.trim()).toContain(
+      'Você deve preencher pelo menos um dos campos de valor a resgatar.'
+    );
+
+    component.dialog.closeAll();
+  });
+
+  it('(U) should submit form with invalid fields', () => {
+    spyOn(service, 'findInvestmentByName').and.returnValue(of(MOCK_INVESTMENT));
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    let el = fixture.debugElement.nativeElement;
+
+    component.formDataRedeem.controls[
+      component.investment.acoes[0].id
+    ].setValue(component.investment.acoes[0].percentual + 10000);
+    component.formDataRedeem.updateValueAndValidity();
+
+    el.querySelector('#redeem-btn-confirm').click();
+
+    const modalText = document.querySelector('.modal-text');
+
+    expect(modalText?.textContent?.trim()).toContain(
+      'Você preencheu um ou mais campos com um valor acima do permitido:'
+    );
+
+    component.dialog.closeAll();
+  });
+
+  it('(U) should submit valid form', () => {
+    spyOn(service, 'findInvestmentByName').and.returnValue(of(MOCK_INVESTMENT));
+
+    component.ngOnInit();
+    fixture.detectChanges();
+
+    let el = fixture.debugElement.nativeElement;
+
+    component.formDataRedeem.controls[
+      component.investment.acoes[0].id
+    ].setValue(1000);
+    component.formDataRedeem.updateValueAndValidity();
+
+    el.querySelector('#redeem-btn-confirm').click();
+
+    const modalText = document.querySelector('.modal-text');
+
+    expect(modalText?.textContent?.trim()).toContain(
+      'Operação realizada com sucesso!'
+    );
+
+    component.dialog.getDialogById('modal-redeem')?.close('success');
+    mockRouter.navigate(['/investimentos/listar']);
+    fixture.detectChanges();
+
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/investimentos/listar']);
   });
 });

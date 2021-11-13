@@ -2,9 +2,8 @@
   <mat-form-field class="form-group" appearance="fill">
     <mat-label>Digite quanto quer resgatar</mat-label>
     <input matInput currencyMask [options]="{ prefix: 'R$ ', thousands: '.', decimal: ',' }"
-      [formControlName]="formConfig.formControlName" id="teste1">
+      [formControlName]="formConfig.formControlName" [id]="formConfig.id">
   </mat-form-field>
-
   <app-handlerFormError [control]="formConfig?.control" [label]="formConfig.label">
   </app-handlerFormError>
 </form>

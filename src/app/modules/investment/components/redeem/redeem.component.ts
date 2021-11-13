@@ -57,6 +57,7 @@ export class RedeemComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params
       .pipe(
+        take(1),
         map((data) => String(data.name).trim()),
         filter((name) => name.length > 0),
         switchMap((name) => this.investmentService.findInvestmentByName(name)),
@@ -84,7 +85,7 @@ export class RedeemComponent implements OnInit {
     } = {};
 
     this.investment.acoes.forEach((action: Action) => {
-      formObj[action.nome] = [
+      formObj[action.id] = [
         null,
         Validators.compose([
           Validators.max(parseFloat(action.percentual.toFixed(2))),
@@ -117,7 +118,9 @@ export class RedeemComponent implements OnInit {
       let stringErrors = '';
       Object.keys(this.formDataRedeem.value).forEach((prop: string) => {
         if (this.formDataRedeem.controls[prop].invalid) {
-          stringErrors += `${prop}: O valor a resgatar não pode ser maior que ${new CurrencyPipe(
+          stringErrors += `${
+            this.investment.acoes.find((res) => res.id === prop)?.nome
+          }: O valor a resgatar não pode ser maior que ${new CurrencyPipe(
             'pt-BR',
             'R$'
           ).transform(this.formDataRedeem.controls[prop]?.errors?.max.max)}\n`;
