@@ -177,7 +177,7 @@ describe('RedeemComponent', () => {
 
     component.formDataRedeem.controls[
       component.investment.acoes[0].id
-    ].setValue(component.investment.acoes[0].percentual + 10000);
+    ].setValue(component.investment.acoes[0].percentual + 100000);
     component.formDataRedeem.updateValueAndValidity();
 
     el.querySelector('#redeem-btn-confirm').click();
