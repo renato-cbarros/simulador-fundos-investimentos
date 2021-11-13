@@ -4,7 +4,7 @@
 
 ![Simulador-de-Fundos-de-Investimento](https://user-images.githubusercontent.com/42192877/141603745-12400a8b-0948-4c7f-91ec-e7b9e88e7262.gif)
 
-### Cobertura teste unitarios até o momento
+### Cobertura testes unitarios até o momento
 
 ![Captura de tela 2021-11-13 002446](https://user-images.githubusercontent.com/42192877/141604014-23a9e25a-63f0-47cb-a485-82d4739d369b.png)
 
